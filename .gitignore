@@ -1,0 +1,23 @@
+# React
+bundle.js
+webpack-stats.json
+
+
+# IDE section #
+.idea
+
+# Unit test / coverage reports
+.coverage
+.tox
+nosetests.xml
+
+# Translations
+*.mo
+
+# Mr Developer
+.mr.developer.cfg
+.project
+.pydevproject
+
+# Mac OS file
+.DS_Store
