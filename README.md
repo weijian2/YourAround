@@ -9,6 +9,11 @@
 * BigTable/BigQuery/ElasticSearch
 * Google App Engine/Google Compute Engine
 
+## Project structure
+The overall structure (tech stack) of this project:
+![](https://github.com/weijian2/YourAround/raw/master/demoPics/structure.png)
+
+
 ## Requirements
 
 ## Installation
