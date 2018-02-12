@@ -36,6 +36,46 @@ const (
 
 
 func main() {
+
+	// Create a client, which means we create a connection to ES. If there is err, return.
+	client, err := elastic.NewClient(elastic.SetURL(ES_URL), elastic.SetSniff(false))
+	if err != nil {
+		panic(err)
+		return
+	}
+
+	// Use the IndexExists service to check if a specified index exists.
+	exists, err := client.IndexExists(INDEX).Do()
+	if err != nil {
+		panic(err)
+	}
+	if !exists {
+		// Create a new index.
+		// If not, create a new mapping. For other fields (user, message, etc.)
+		// no need to have mapping as they are default. For geo location (lat, lon),
+		// we need to tell ES that they are geo points instead of two float points
+		// such that ES will use Geo-indexing for them (K-D tree)
+
+		mapping := `{
+                    "mappings":{
+                           "post":{
+                                  "properties":{
+                                         "location":{
+                                                "type":"geo_point"
+                                         }
+                                  }
+                           }
+                    }
+             }
+             `
+		_, err := client.CreateIndex(INDEX).Body(mapping).Do() // Create this index
+		if err != nil {
+			// Handle error
+			panic(err)
+		}
+	}
+
+
 	fmt.Println("service start")
 	http.HandleFunc("/post", handlerPost)
 	http.HandleFunc("/search", handlerSearch)
