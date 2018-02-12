@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"reflect"
 	"gopkg.in/olivere/elastic.v3"
+	"github.com/pborman/uuid"
 )
 
 // type/struct are keywords in GO, struct is similar to class in java, Location is struct name
@@ -75,7 +76,6 @@ func main() {
 		}
 	}
 
-
 	fmt.Println("service start")
 	http.HandleFunc("/post", handlerPost)
 	http.HandleFunc("/search", handlerSearch)
@@ -91,6 +91,9 @@ func handlerPost(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 		return
 	}
+	id := uuid.New()
+	// Save user post to ElasticSearch.
+	saveToES(&p, id)
 	fmt.Fprintf(w, "Post received: %s\n", p.Message)
 }
 
@@ -183,4 +186,29 @@ func handlerSearch(w http.ResponseWriter, r *http.Request) {
 	//w.Write(js)
 	//
 	////fmt.Fprintf(w, "Search received: %s %s", lat, lon)
+}
+
+// Save a post to ElasticSearch
+func saveToES(p *Post, id string) {
+	// Create a client
+	es_client, err := elastic.NewClient(elastic.SetURL(ES_URL), elastic.SetSniff(false))
+	if err != nil {
+		panic(err)
+		return
+	}
+
+	// Save it to index, example taken from https://github.com/olivere/elastic
+	_, err = es_client.Index().
+		Index(INDEX).
+		Type(TYPE).
+		Id(id).
+		BodyJson(p).
+		Refresh(true).
+		Do()
+	if err != nil {
+		panic(err)
+		return
+	}
+
+	fmt.Printf("Post is saved to Index: %s\n", p.Message)
 }
