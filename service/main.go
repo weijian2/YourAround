@@ -32,7 +32,7 @@ const (
 	//PROJECT_ID = "around-xxx"
 	//BT_INSTANCE = "around-post"
 	// Needs to update this URL if you deploy it to cloud.
-	ES_URL = "http://35.196.197.253:9200"
+	ES_URL = "http://35.231.68.27:9200"
 )
 
 
@@ -165,30 +165,9 @@ func handlerSearch(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Write(js)
-
-	//// return fake post
-	//p := &Post {
-	//	User:"Weijian",
-	//	Message:"是中国人就转，不转不是人",
-	//	Location: Location {
-	//		Lat: lat,
-	//		Lon: lon,
-	//	},
-	//}
-	//
-	//js, err := json.Marshal(p)
-	//if err != nil {
-	//	panic(err)
-	//	return
-	//}
-	//
-	//w.Header().Set("Content-Type", "application/json")
-	//w.Write(js)
-	//
-	////fmt.Fprintf(w, "Search received: %s %s", lat, lon)
 }
 
-// Save a post to ElasticSearch
+// private method, Save a post to ElasticSearch
 func saveToES(p *Post, id string) {
 	// Create a client
 	es_client, err := elastic.NewClient(elastic.SetURL(ES_URL), elastic.SetSniff(false))
