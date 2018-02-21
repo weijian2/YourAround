@@ -1,7 +1,7 @@
 # Introduction
 
 
-## Why doing this project
+## Why this project
 
 
 ## Tech Stack
@@ -12,10 +12,16 @@
 ## Project structure
 The overall structure (tech stack) of this project:
 ![](https://github.com/weijian2/YourAround/raw/master/demoPics/structure.png)
-why Google Cloud Storage(GCS)?<br>
+
+Tech Stack choosen
+1. Why choose Golang as backend language?<br>
+2. Why choose elasticSearch?<br>
+3. Why choose Google App Engine?<br>
+4. Why choose Google Compute Engine?<br>
+5. Why Google Cloud Storage(GCS)?<br>
 * To store unstructured data (user posted images). BigTable, BigQuery, ElasticSearch are all for structured data. GCS is well-known for its durability, scalability and availability.
-why ElasticSearch?<br>
-* ...
+6. Why use BigTable?<br>
+7. Why use BigQuery?<br>
 
 ## Requirements
 
