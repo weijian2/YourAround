@@ -7,12 +7,13 @@
 ## Tech Stack
 * Go/React.js
 * BigTable/BigQuery/ElasticSearch
-* Google App Engine/Google Compute Engine
+* Google App Engine(GAE)/Google Compute Engine(GCE)/Google Cloud Storage(GCS)
 
 ## Project structure
 The overall structure (tech stack) of this project:
 ![](https://github.com/weijian2/YourAround/raw/master/demoPics/structure.png)
-
+why Google Cloud Storage(GCS)?<br>
+* To store unstructured data (user posted images). BigTable, BigQuery, ElasticSearch are all for structured data. GCS is well-known for its durability, scalability and availability.
 
 ## Requirements
 
@@ -28,7 +29,7 @@ The overall structure (tech stack) of this project:
 
 ## Deployment
 Deployed backend to GAE(Google App Engine)<br>
-click [demo link](https://youraround-194922.appspot.com) to visit
+click [demo link](https://youraround-cmu.appspot.com) to visit
 
 ## Change Log
 1. v0.0.1(02/11/2018)<br>
