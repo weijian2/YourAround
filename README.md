@@ -15,9 +15,25 @@ The overall structure (tech stack) of this project:
 
 Tech Stack choosen
 1. Why choose Golang as backend language?<br>
+* Go is built for system, web app, pretty low level, we don’t need Django for python and TomCat for java. It has built-in web services to handle HTTP request/response, URL mapping…
+* Go has been very well designed and optimised for scaling(Go routine and channel)
+* Go is a fast, statically typed, compiled language that feels like a dynamically typed, interpreted language.
+* In my opinion, go the future of server language.
+
 2. Why choose elasticSearch?<br>
-3. Why choose Google App Engine?<br>
+* ES is an open source, distributed, RESTful search engine. As the heart of the Elastic Stack, it centrally stores our data so we can query the data quickly.
+* ES is implemented by K-D tree, which is very efficient to perform 2-dimensional search problem(e.g. given latitute and longitute, search all posts in that position within 200km)
+* I also use ES to store structured data(post's content, lat and lon)
+
+3. Why choose Google App Engine Flex?<br>
+* Google App Engine is a cloud computing platform for developing and hosting web applications in Google-managed data centers.
+* Actually, GAE is based on GCE, however, by using GAE, I don't need to build a system by myself, load balancer and VMs are implemented in black box in GAE.
+* App Engine flexible environment automatically scales app up and down while balancing the load. Microservices, authorization, SQL and NoSQL databases, traffic splitting, logging. 
+
 4. Why choose Google Compute Engine?<br>
+* GCE is similar to Amazon EC2, which offers virtual machines (Xen, KVM, VirtualBox, VMware ESX, etc.). Amazon EC2 and Google Compute Engine belong to IaaS as well. 
+* I install ES in the VM(Ubuntu 16) in the GCE to store post information and perform search.
+
 5. Why Google Cloud Storage(GCS)?<br>
 * To store unstructured data (user posted images). BigTable, BigQuery, ElasticSearch are all for structured data. GCS is well-known for its durability, scalability and availability.
 6. Why use BigTable?<br>
