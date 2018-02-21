@@ -13,7 +13,7 @@
 The overall structure (tech stack) of this project:
 ![](https://github.com/weijian2/YourAround/raw/master/demoPics/structure.png)
 
-Tech Stack choosen
+Tech Stack choosen<br>
 **1. Why choose Golang as backend language?**<br>
 * Go is built for system, web app, pretty low level, we don’t need Django for python and TomCat for java. It has built-in web services to handle HTTP request/response, URL mapping…
 * Go has been very well designed and optimised for scaling(Go routine and channel)
@@ -74,5 +74,5 @@ click [demo link](https://youraround-cmu.appspot.com) to visit
 NAN
 
 ## Notes
-
+If you have any questions, feel free to contact me at weijian1@andrew.cmu.edu
 
