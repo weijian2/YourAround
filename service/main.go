@@ -107,7 +107,7 @@ func handlerPost(w http.ResponseWriter, r *http.Request) {
 	lat, _ := strconv.ParseFloat(r.FormValue("lat"), 64)
 	lon, _ := strconv.ParseFloat(r.FormValue("lon"), 64)
 	p := &Post{
-		User:    "1111",
+		User:    "Bryant",
 		Message: r.FormValue("message"),
 		Location: Location{
 			Lat: lat,
@@ -143,8 +143,8 @@ func handlerPost(w http.ResponseWriter, r *http.Request) {
 	// Save to ES.
 	saveToES(p, id)
 
-	// Save to BigTable.
-	saveToBigTable(ctx, p, id)
+	//// Save to BigTable as well.
+	//saveToBigTable(ctx, p, id)
 
 }
 
