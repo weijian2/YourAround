@@ -86,6 +86,8 @@ click [demo link](https://youraround-cmu.appspot.com) to visit
 * Update handlerPost function to parse multipart form and store post with image file into GCS.
 5. v0.0.5(02/23/2018)<br>
 * Update handlerPost function to support save post data into BigTable.
+6. v0.0.6(02/25/2018)<br>
+* Implement Google dataflow to dump post data from BigTable to BigQuery.
 
 ## Licenses
 NAN
