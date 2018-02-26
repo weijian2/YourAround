@@ -17,7 +17,8 @@ import (
 	"github.com/auth0/go-jwt-middleware"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
-
+	"github.com/go-redis/redis"
+	"time"
 )
 
 // type/struct are keywords in GO, struct is similar to class in java, Location is struct name
@@ -42,6 +43,9 @@ const (
 	BT_INSTANCE = "around-post"
 	ES_URL = "http://35.192.73.192:9200/"
 	BUCKET_NAME = "post-images-youraround-cmu"
+	ENABLE_MEMCACHE = true
+	ENABLE_BIGTABLE = false
+	REDIS_URL       = "redis-14642.c1.us-central1-2.gce.cloud.redislabs.com:14642"
 )
 // private key used to sign token
 var mySigningKey = []byte("mySecretKey")
@@ -94,6 +98,7 @@ func main() {
 	//log.Fatal(http.ListenAndServe(":8080", nil))
 
 	// with Auth
+	// reference: https://auth0.com/blog/authentication-in-golang/
 	// Create a new router on top of the existing http router as we need to check auth.
 	r := mux.NewRouter()
 	// Create a new JWT middleware with a Option that uses the key ‘mySigningKey’ such that we know this token is
@@ -176,9 +181,10 @@ func handlerPost(w http.ResponseWriter, r *http.Request) {
 	// Save to ES.
 	saveToES(p, id)
 
-	//// Save to BigTable as well.
-	//saveToBigTable(ctx, p, id)
-
+	// Save to BigTable as well.
+	if ENABLE_BIGTABLE {
+		saveToBigTable(ctx, p, id)
+	}
 }
 
 // http://localhost:8888/search?lat=10.0&lon=20.0
@@ -195,6 +201,30 @@ func handlerSearch(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Printf( "Search received: %f %f %s\n", lat, lon, ran)
 
+	// use cache, reference: https://github.com/go-redis/redis
+	// use lat+lon+range as key
+	key := r.URL.Query().Get("lat") + ":" + r.URL.Query().Get("lon") + ":" + ran
+	// First find query with cache.
+	if ENABLE_MEMCACHE {
+		// build connection with Redis
+		rs_client := redis.NewClient(&redis.Options{
+			Addr:     REDIS_URL,
+			Password: "", // no password set
+			DB:       0,  // use default DB
+		})
+
+		val, err := rs_client.Get(key).Result()
+		if err != nil {
+			fmt.Printf("Cache miss! Redis cannot find the key %s as %v.\n", key, err)
+		} else { // cache hit
+			fmt.Printf("Cache hit! Redis find the key %s.\n", key)
+			w.Header().Set("Content-Type", "application/json")
+			w.Write([]byte(val))
+			return
+		}
+	}
+
+	// for here, not enable cache or cache miss, we need to search in database(ES).
 	// Create a client，which means we create a connection to ES. If there is err, return.
 	client, err := elastic.NewClient(elastic.SetURL(ES_URL), elastic.SetSniff(false))
 	if err != nil {
@@ -245,6 +275,24 @@ func handlerSearch(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 		return
+	}
+
+	// for here, we find result from ES, we need to write result into Redis, use TTL(time to live) as
+	// caching strategy to avoid result inconsistent
+	if ENABLE_MEMCACHE {
+		// build connection with Redis
+		rs_client := redis.NewClient(&redis.Options{
+			Addr:     REDIS_URL,
+			Password: "", // no password set
+			DB:       0,  // use default DB
+		})
+
+		// Set the cache expiration to be 30 seconds
+		err := rs_client.Set(key, string(js), time.Second*30).Err()
+		if err != nil {
+			fmt.Printf("Redis cannot save the key %s as %v.\n", key, err)
+		}
+
 	}
 
 	w.Header().Set("Content-Type", "application/json")
