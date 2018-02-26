@@ -14,6 +14,10 @@ import (
 	"cloud.google.com/go/storage"
 	"io"
 	"cloud.google.com/go/bigtable"
+	"github.com/auth0/go-jwt-middleware"
+	"github.com/dgrijalva/jwt-go"
+	"github.com/gorilla/mux"
+
 )
 
 // type/struct are keywords in GO, struct is similar to class in java, Location is struct name
@@ -32,13 +36,15 @@ type Post struct {
 
 const (
 	INDEX = "around"
-	TYPE = "post"
+	TYPE = "post" // table name in ES to store post data
 	DISTANCE = "200km"
 	PROJECT_ID = "youraround-cmu"
 	BT_INSTANCE = "around-post"
-	ES_URL = "http://35.202.253.25:9200/"
+	ES_URL = "http://35.192.73.192:9200/"
 	BUCKET_NAME = "post-images-youraround-cmu"
 )
+// private key used to sign token
+var mySigningKey = []byte("mySecretKey")
 
 
 func main() {
@@ -82,9 +88,32 @@ func main() {
 	}
 
 	fmt.Println("service start")
-	http.HandleFunc("/post", handlerPost)
-	http.HandleFunc("/search", handlerSearch)
+	//// without Auth
+	//http.HandleFunc("/post", handlerPost)
+	//http.HandleFunc("/search", handlerSearch)
+	//log.Fatal(http.ListenAndServe(":8080", nil))
+
+	// with Auth
+	// Create a new router on top of the existing http router as we need to check auth.
+	r := mux.NewRouter()
+	// Create a new JWT middleware with a Option that uses the key ‘mySigningKey’ such that we know this token is
+	// from our server. The signing method is the default HS256 algorithm such that data is encrypted.
+	var jwtMiddleware = jwtmiddleware.New(jwtmiddleware.Options{
+		ValidationKeyGetter: func(token *jwt.Token) (interface{}, error) {
+			return mySigningKey, nil
+		},
+		SigningMethod: jwt.SigningMethodHS256,
+	})
+	// It means we use jwt middleware to manage these endpoints and if they don’t have valid token, we will reject them.
+	r.Handle("/post", jwtMiddleware.Handler(http.HandlerFunc(handlerPost))).Methods("POST")
+	r.Handle("/search", jwtMiddleware.Handler(http.HandlerFunc(handlerSearch))).Methods("GET")
+	// login and signup don't need middleware, since it is the first time of request, we don't have token now.
+	r.Handle("/login", http.HandlerFunc(loginHandler)).Methods("POST")
+	r.Handle("/signup", http.HandlerFunc(signupHandler)).Methods("POST")
+
+	http.Handle("/", r)
 	log.Fatal(http.ListenAndServe(":8080", nil))
+
 }
 
 // how to parse multipart form in Go?
@@ -96,6 +125,10 @@ func handlerPost(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type,Authorization")
 
+	// get username from context instead of letting user to input username themselves
+	user := r.Context().Value("user")
+	claims := user.(*jwt.Token).Claims
+	username := claims.(jwt.MapClaims)["username"]
 
 	// 32 << 20 is the maxMemory param for ParseMultipartForm, equals to 32MB (1MB = 1024 * 1024 bytes = 2^20 bytes)
 	// After you call ParseMultipartForm, the file will be saved in the server memory with maxMemory size.
@@ -107,7 +140,7 @@ func handlerPost(w http.ResponseWriter, r *http.Request) {
 	lat, _ := strconv.ParseFloat(r.FormValue("lat"), 64)
 	lon, _ := strconv.ParseFloat(r.FormValue("lon"), 64)
 	p := &Post{
-		User:    "Bryant",
+		User:    username.(string),
 		Message: r.FormValue("message"),
 		Location: Location{
 			Lat: lat,
