@@ -49,6 +49,13 @@ Tech Stacks choosen reasons<br>
 * I want to do some data analysis of user posted data(like sentiment analysis, spam filter..). BigTable is designed for saving large volume of data but not good for querying (JOIN, ORDER BY etc.). BigQuery, instead, is efficient for querying. It is Google's fully managed, petabyte scale, low cost enterprise data warehouse. It supports data analysis by using SQL syntax.
 * In order to dump data into BigQuery from BigTable, I need to use Google DataFlow, which runs in Google's cloud platform, who can help me to transform my data from BigTable to BigQuery easily.
 
+**9. Why use Cache?**<br>
+* When performance needs to be improved, caching is often the first step to take, so I decide to place previously requested information (search query) in cache to speed up data access and reduce bandwidth demand. In this project, I use TTL(time to live) as caching Strategy.
+
+**10. Why Choose Redis instead of Memcached?**<br>
+* Redis is an open source, in-memory data structure store, used as a database, cache and message broker. Basically a key-values store. Google Cloud has a memcache similarly but it does not support GAE flex yet.
+* Redis has more features than Memcached and is, thus, more powerful and flexible. Refered this link: https://www.infoworld.com/article/3063161/nosql/why-redis-beats-memcached-for-caching.html
+
 ## Tools
 GoLand
 Google Cloud Platform
@@ -90,6 +97,8 @@ click [demo link](https://youraround-cmu.appspot.com) to visit
 * Implement Google dataflow to dump post data from BigTable to BigQuery.
 7. v0.0.7(03/01/2018)<br>
 * Used OAuth 2.0 to support authentication and user signup.
+8. v0.0.8(03/10/2018)<br>
+* Used Redis to cache search requests to speed up user query.
 
 ## Licenses
 NAN
