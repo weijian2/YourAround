@@ -88,6 +88,8 @@ click [demo link](https://youraround-cmu.appspot.com) to visit
 * Update handlerPost function to support save post data into BigTable.
 6. v0.0.6(02/25/2018)<br>
 * Implement Google dataflow to dump post data from BigTable to BigQuery.
+7. v0.0.7(03/01/2018)<br>
+* Used OAuth 2.0 to support authentication and user signup.
 
 ## Licenses
 NAN
