@@ -99,6 +99,8 @@ click [demo link](https://youraround-cmu.appspot.com) to visit
 * Used OAuth 2.0 to support authentication and user signup.
 8. v0.0.8(03/10/2018)<br>
 * Used Redis to cache search requests to speed up user query.
+9. v0.0.9(03/17/2018)<br>
+* Init front-end React project, front-end change log will updated in /youraround-front.
 
 ## Licenses
 NAN
