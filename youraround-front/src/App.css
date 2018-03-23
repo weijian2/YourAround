@@ -1,3 +1,5 @@
+@import '~antd/dist/antd.css';
+
 .App {
   text-align: center;
 }
@@ -38,6 +40,7 @@
   font-size: 1.5em;
   float: left;
   color: #61dafb;
+  padding-top: 16px;
 }
 
 @keyframes App-logo-spin {
