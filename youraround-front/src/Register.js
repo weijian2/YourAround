@@ -1,32 +1,9 @@
 import React from 'react';
-import { Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Button, AutoComplete } from 'antd';
+import { Form, Input, Checkbox, Button } from 'antd';
 const FormItem = Form.Item;
-const Option = Select.Option;
-const AutoCompleteOption = AutoComplete.Option;
 
-const residences = [{
-    value: 'zhejiang',
-    label: 'Zhejiang',
-    children: [{
-        value: 'hangzhou',
-        label: 'Hangzhou',
-        children: [{
-            value: 'xihu',
-            label: 'West Lake',
-        }],
-    }],
-}, {
-    value: 'jiangsu',
-    label: 'Jiangsu',
-    children: [{
-        value: 'nanjing',
-        label: 'Nanjing',
-        children: [{
-            value: 'zhonghuamen',
-            label: 'Zhong Hua Men',
-        }],
-    }],
-}];
+
+
 
 class RegistrationForm extends React.Component {
     state = {
@@ -60,18 +37,9 @@ class RegistrationForm extends React.Component {
         }
         callback();
     }
-    handleWebsiteChange = (value) => {
-        let autoCompleteResult;
-        if (!value) {
-            autoCompleteResult = [];
-        } else {
-            autoCompleteResult = ['.com', '.org', '.net'].map(domain => `${value}${domain}`);
-        }
-        this.setState({ autoCompleteResult });
-    }
+
     render() {
         const { getFieldDecorator } = this.props.form;
-        const { autoCompleteResult } = this.state;
 
         const formItemLayout = {
             labelCol: {
@@ -95,38 +63,21 @@ class RegistrationForm extends React.Component {
                 },
             },
         };
-        const prefixSelector = getFieldDecorator('prefix', {
-            initialValue: '86',
-        })(
-            <Select style={{ width: 70 }}>
-                <Option value="86">+86</Option>
-                <Option value="87">+87</Option>
-            </Select>
-        );
 
-        const websiteOptions = autoCompleteResult.map(website => (
-            <AutoCompleteOption key={website}>{website}</AutoCompleteOption>
-        ));
 
         return (
             <Form onSubmit={this.handleSubmit}>
                 <FormItem
                     {...formItemLayout}
-                    label={(
-                        <span>
-              Nickname&nbsp;
-                            <Tooltip title="What do you want others to call you?">
-                <Icon type="question-circle-o" />
-              </Tooltip>
-            </span>
-                    )}
+                    label="Username"
                 >
-                    {getFieldDecorator('nickname', {
-                        rules: [{ required: true, message: 'Please input your nickname!', whitespace: true }],
+                    {getFieldDecorator('username', {
+                        rules: [{ required: true, message: 'Please input your username!', whitespace: true }],
                     })(
                         <Input />
                     )}
                 </FormItem>
+
                 <FormItem
                     {...formItemLayout}
                     label="Password"
@@ -141,6 +92,7 @@ class RegistrationForm extends React.Component {
                         <Input type="password" />
                     )}
                 </FormItem>
+
                 <FormItem
                     {...formItemLayout}
                     label="Confirm Password"
@@ -155,10 +107,6 @@ class RegistrationForm extends React.Component {
                         <Input type="password" onBlur={this.handleConfirmBlur} />
                     )}
                 </FormItem>
-
-
-
-
 
                 <FormItem {...tailFormItemLayout}>
                     {getFieldDecorator('agreement', {
