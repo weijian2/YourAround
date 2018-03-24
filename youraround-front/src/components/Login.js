@@ -1,8 +1,10 @@
+import { Link } from 'react-router-dom'
 import $ from 'jquery';
 import { API_ROOT } from "../constants";
 import React from 'react';
 import { Form, Icon, Input, Button, message } from 'antd';
 const FormItem = Form.Item;
+
 
 
 class NormalLoginForm extends React.Component {
@@ -20,6 +22,7 @@ class NormalLoginForm extends React.Component {
                     })
                 }).then((response) => {
                     message.success(response);
+                    this.props.handleLogin(response);
                 }, (error) => {
                     message.error(error.responseText);
                 }).catch((error) => {
@@ -50,7 +53,7 @@ class NormalLoginForm extends React.Component {
                     <Button type="primary" htmlType="submit" className="login-form-button">
                         Log in
                     </Button>
-                    Or <a href="">register now!</a>
+                    Or <Link to={"/register"}>register now!</Link>
                 </FormItem>
             </Form>
         );
