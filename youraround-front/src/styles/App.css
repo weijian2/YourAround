@@ -2,51 +2,18 @@
 @import 'Register.css';
 @import 'Main.css';
 @import "Login.css";
-
+@import "Header_index.css";
+@import "Header.css";
 
 .App {
   text-align: center;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
-}
-
-.App-header {
-  background-color: #222;
-  height: 200px;
-  padding: 40px;
-  color: white;
-}
-
-.App-title {
-  font-size: 1.5em;
-  color: #61dafb;
-}
 
 .App-intro {
   font-size: large;
 }
 
-.App-logo-index {
-  animation: App-logo-spin infinite 20s linear;
-  height: 60px;
-  float: left;
-}
-
-.App-header-index {
-  background-color: #222;
-  height: 60px;
-  color: white;
-}
-
-.App-title-index {
-  font-size: 1.5em;
-  float: left;
-  color: #61dafb;
-  padding-top: 16px;
-}
 
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
