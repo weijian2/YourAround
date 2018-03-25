@@ -12,10 +12,11 @@ class App extends Component {
 
     handleLogin = (token) => {
         localStorage.setItem(TOKEN_KEY, token);
-        this.setState = ({
+        this.setState({
             isLoggedIn : true,
         });
     }
+
     render() {
         return (
             <div className="App">
