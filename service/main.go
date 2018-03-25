@@ -41,7 +41,7 @@ const (
 	DISTANCE = "200km"
 	PROJECT_ID = "youraround-cmu"
 	BT_INSTANCE = "around-post"
-	ES_URL = "http://35.192.73.192:9200/"
+	ES_URL = "http://35.226.169.43:9200/"
 	BUCKET_NAME = "post-images-youraround-cmu"
 	ENABLE_MEMCACHE = true
 	ENABLE_BIGTABLE = false
@@ -190,6 +190,9 @@ func handlerPost(w http.ResponseWriter, r *http.Request) {
 // http://localhost:8888/search?lat=10.0&lon=20.0
 // http://localhost:8888/search?lat=10.0&lon=20.0&range=100
 func handlerSearch(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	
 	fmt.Println("Received one request for search")
 	lat, _ := strconv.ParseFloat(r.URL.Query().Get("lat"), 64)
 	lon, _ := strconv.ParseFloat(r.URL.Query().Get("lon"), 64)
@@ -295,8 +298,6 @@ func handlerSearch(w http.ResponseWriter, r *http.Request) {
 
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Write(js)
 }
 

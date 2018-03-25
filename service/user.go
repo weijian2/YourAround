@@ -102,6 +102,8 @@ func addUser(username, password string) bool {
 
 // If signup is successful, a new session is created.
 func signupHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/plain")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	fmt.Println("Received one signup request")
 
 	// Decode a user from request’s body
@@ -114,23 +116,24 @@ func signupHandler(w http.ResponseWriter, r *http.Request) {
 
 	if u.Username != "" && u.Password != "" {
 		if addUser(u.Username, u.Password) {
-			fmt.Println("User added successfully.")
-			w.Write([]byte("User added successfully."))
+			fmt.Println("Register successfully.")
+			w.Write([]byte("Register successfully."))
 		} else {
-			fmt.Println("Failed to add a new user.")
-			http.Error(w, "Failed to add a new user", http.StatusInternalServerError)
+			fmt.Println("Failed to register a new user.")
+			http.Error(w, "Failed to register a new user", http.StatusInternalServerError)
 		}
 	} else {
 		fmt.Println("Empty password or username.")
 		http.Error(w, "Empty password or username", http.StatusInternalServerError)
 	}
 
-	w.Header().Set("Content-Type", "text/plain")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
+
 }
 
 // If login is successful, a new token is created.
 func loginHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/plain")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	fmt.Println("Received one login request")
 
 	// Decode a user from request’s body
@@ -163,8 +166,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid password or username", http.StatusForbidden)
 	}
 
-	w.Header().Set("Content-Type", "text/plain")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
+
 }
 
 
