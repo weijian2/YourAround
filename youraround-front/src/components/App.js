@@ -20,7 +20,7 @@ class App extends Component {
     render() {
         return (
             <div className="App">
-                <Header/>
+                {this.state.isLoggedIn ? <Header_index /> : <Header />}
                 <Main isLoggedIn={this.state.isLoggedIn} handleLogin={this.handleLogin}/>
             </div>
         );
